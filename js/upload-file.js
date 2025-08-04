@@ -1,31 +1,53 @@
+import {isEscapeKey} from './util';
+
 const body = document.body;
-const uploadForm = document.querySelector('.img-upload__form');
-const uploadButtonCancel = uploadForm.querySelector('.img-upload__cancel');
-const uploadPreviewImg = uploadForm.querySelector('.img-upload__preview img');
-const uploadInput = uploadForm.querySelector('.img-upload__input');
-const uploadOverlay = uploadForm.querySelector('.img-upload__overlay');
-const effectsLevel = uploadForm.querySelector('.img-upload__effect-level');
-const scale = uploadForm.querySelector('.scale');
+const form = document.querySelector('.img-upload__form');
+const buttonCancel = form.querySelector('.img-upload__cancel');
+const previewImg = form.querySelector('.img-upload__preview img');
+const inputFile = form.querySelector('.img-upload__input');
+const overlay = form.querySelector('.img-upload__overlay');
+const effectsLevel = form.querySelector('.img-upload__effect-level');
+const scale = form.querySelector('.scale');
 const scaleInput = scale.querySelector('.scale__control--value');
+const description = form.querySelector('.text__description');
+const hashtagsElem = form.querySelector('.text__hashtags');
 let scaleValue = 100;
 const scaleValueStep = 25;
 
-const resizeImage = (value) => {
-  scaleInput.value = `${value}%`;
-  uploadPreviewImg.style.scale = `${value}%`;
+const onEscKeydown = (evt) => {
+  if(isEscapeKey(evt)){
+    if(document.activeElement === description || document.activeElement === hashtagsElem){
+      return;
+    }
+    evt.preventDefault();
+    closeUploadForm();
+  }
 };
 
-uploadInput.addEventListener('change', () => {
-  uploadOverlay.classList.remove('hidden');
+const closeUploadForm = () => {
+  overlay.classList.add('hidden');
+  body.classList.remove('modal-open');
+  document.removeEventListener('keydown',onEscKeydown);
+  form.reset();
+};
+
+inputFile.addEventListener('change', () => {
+  overlay.classList.remove('hidden');
   body.classList.add('modal-open');
   effectsLevel.classList.add('hidden');
+  scaleValue = 100;
+  previewImg.style.scale = scaleInput.value;
+  document.addEventListener('keydown', onEscKeydown);
 });
 
-uploadButtonCancel.addEventListener('click', () => {
-  uploadOverlay.classList.add('hidden');
-  body.classList.remove('modal-open');
-  uploadInput.change = '';
+buttonCancel.addEventListener('click', () => {
+  closeUploadForm();
 });
+
+const resizeImage = (value) => {
+  scaleInput.value = `${value}%`;
+  previewImg.style.scale = `${value}%`;
+};
 
 scale.addEventListener('click', (evt) => {
   if(evt.target.closest('.scale__control--smaller') && scaleValue > 25) {
