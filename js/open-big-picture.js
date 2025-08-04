@@ -81,10 +81,10 @@ bigPictureClose.addEventListener('click', ()=> {
 const openBigPicture = () => {
   picturesWrapper.addEventListener('click', (evt) => {
     const targetElement = evt.target.closest('.picture');
-    const idPicture = Number(targetElement.dataset.id);
 
     if(targetElement) {
       evt.preventDefault();
+      const idPicture = Number(targetElement.dataset.id);
       createBigPicture(idPicture);
     }
   });
