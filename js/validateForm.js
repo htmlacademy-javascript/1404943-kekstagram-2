@@ -57,6 +57,7 @@ uploadForm.addEventListener('submit', (evt) => {
 
   if (isValid) {
     console.log('Форма валидна! Отправляем...');
+    uploadForm.submit();
   } else {
     console.log('Форма невалидна. Проверьте ошибки.');
   }
