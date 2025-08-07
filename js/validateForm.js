@@ -57,7 +57,11 @@ uploadForm.addEventListener('submit', (evt) => {
 
   if (isValid) {
     console.log('Форма валидна! Отправляем...');
-    uploadForm.submit();
+    const formData = new FormData(evt.target);
+    // Вариант 2: Итерация через forEach()
+    formData.forEach((value, key) => {
+      console.log(key + ': ' + value);
+    });
   } else {
     console.log('Форма невалидна. Проверьте ошибки.');
   }

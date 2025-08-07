@@ -35,7 +35,8 @@ inputFile.addEventListener('change', () => {
   overlay.classList.remove('hidden');
   body.classList.add('modal-open');
   effectsLevel.classList.add('hidden');
-  // effectsLevel.value = '';
+  effectsLevel.value = '';
+  previewImg.style.filter = 'none';
   scaleValue = 100;
   previewImg.style.scale = scaleInput.value;
   document.addEventListener('keydown', onEscKeydown);

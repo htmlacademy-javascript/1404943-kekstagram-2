@@ -1,7 +1,7 @@
 const slider = document.querySelector('.img-upload__effect-level');
 const effects = document.querySelector('.img-upload__effects');
 const effectLevelInput = document.querySelector('.effect-level__value');
-const img = document.querySelector('.img-upload__preview img');
+const previewImg = document.querySelector('.img-upload__preview img');
 const dataSlider = [
   {
     name: 'none',
@@ -72,6 +72,8 @@ const dataSlider = [
     }
   },
 ];
+let effectSlider = {};
+
 noUiSlider.create(slider, {
   range: {
     min: 0,
@@ -93,28 +95,27 @@ noUiSlider.create(slider, {
     },
   },
 });
-let effectSlider = {};
+
+
 effects.addEventListener('change', (evt) => {
-  const effect = evt.target.value;
+  const effectCurrent = evt.target.value;
 
-  effectSlider = dataSlider.find((test) => test.name === effect);
+  effectSlider = dataSlider.find((test) => test.name === effectCurrent);
 
-  if(effect !== 'none') {
-    slider.classList.remove('hidden');
+  if(effectCurrent === 'none') {
+    previewImg.style.filter = effectSlider.filter;
     effectLevelInput.value = '';
-  } else {
     slider.classList.add('hidden');
-  }
-  if(effectSlider) {
+  } else {
+    slider.classList.remove('hidden');
+
     slider.noUiSlider.updateOptions(effectSlider.setting);
   }
+
 });
 
 slider.noUiSlider.on('update', (values) => {
-  effectLevelInput.value = values;
-  if(effectSlider.filter === 'none') {
-    img.style.filter = 'none';
-  } else {
-    img.style.filter = `${effectSlider.filter}(${values}${effectSlider.units})`;
-  }
+  effectLevelInput.value = slider.noUiSlider.get();
+  previewImg.style.filter = `${effectSlider.filter}(${values}${effectSlider.units})`;
 });
+
