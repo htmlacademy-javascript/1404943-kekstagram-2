@@ -1,5 +1,4 @@
 import {isEscapeKey} from './util';
-import {photosList} from './render-photos';
 const body = document.body;
 const picturesWrapper = document.querySelector('.pictures');
 const bigPicture = document.querySelector('.big-picture');
@@ -46,7 +45,7 @@ const renderComments = () => {
   return commentsList.appendChild(commentListTemplate);
 };
 
-const createBigPicture = (id) => {
+const createBigPicture = (id, photosList) => {
   const {url, comments,likes, description} = photosList.find((photo) => photo.id === id);
 
   body.classList.add('modal-open');
@@ -78,14 +77,14 @@ bigPictureClose.addEventListener('click', ()=> {
   closeBigPicture();
 });
 
-const openBigPicture = () => {
+const openBigPicture = (photosList) => {
   picturesWrapper.addEventListener('click', (evt) => {
     const targetElement = evt.target.closest('.picture');
 
     if(targetElement) {
       evt.preventDefault();
       const idPicture = Number(targetElement.dataset.id);
-      createBigPicture(idPicture);
+      createBigPicture(idPicture, photosList);
     }
   });
 };

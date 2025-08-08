@@ -11,34 +11,51 @@ const scale = form.querySelector('.scale');
 const scaleInput = scale.querySelector('.scale__control--value');
 const description = form.querySelector('.text__description');
 const hashtagsElem = form.querySelector('.text__hashtags');
-let scaleValue = 100;
+const scaleValueMax = 100;
+let scaleValueCurrent = scaleValueMax;
 const scaleValueStep = 25;
 
-const onEscKeydown = (evt) => {
+// Function declarations
+function closeUploadForm() {
+  overlay.classList.add('hidden');
+  body.classList.remove('modal-open');
+
+  // Reset effects
+  effectsLevel.value = '';
+  previewImg.style.filter = 'none';
+  effectsLevel.classList.add('hidden');
+
+  // Reset scale
+  scaleValueCurrent = scaleValueMax;
+  scaleInput.value = `${scaleValueMax}%`;
+  previewImg.style.scale = `${scaleValueMax}%`;
+
+  // Reset form fields
+  form.reset();
+
+  // Clear file input
+  inputFile.value = '';
+
+  document.removeEventListener('keydown', onEscKeydown);
+}
+
+function onEscKeydown(evt) {
   if(isEscapeKey(evt)){
     if(document.activeElement === description || document.activeElement === hashtagsElem){
+      return;
+    }
+    if(document.querySelector('.error')){
       return;
     }
     evt.preventDefault();
     closeUploadForm();
   }
-};
-
-const closeUploadForm = () => {
-  overlay.classList.add('hidden');
-  body.classList.remove('modal-open');
-  document.removeEventListener('keydown',onEscKeydown);
-  form.reset();
-};
+}
 
 inputFile.addEventListener('change', () => {
   overlay.classList.remove('hidden');
   body.classList.add('modal-open');
   effectsLevel.classList.add('hidden');
-  effectsLevel.value = '';
-  previewImg.style.filter = 'none';
-  scaleValue = 100;
-  previewImg.style.scale = scaleInput.value;
   document.addEventListener('keydown', onEscKeydown);
 });
 
@@ -52,12 +69,13 @@ const resizeImage = (value) => {
 };
 
 scale.addEventListener('click', (evt) => {
-  if(evt.target.closest('.scale__control--smaller') && scaleValue > 25) {
-    scaleValue -= scaleValueStep;
-    resizeImage(scaleValue);
+  if(evt.target.closest('.scale__control--smaller') && scaleValueCurrent > 25) {
+    scaleValueCurrent -= scaleValueStep;
+    resizeImage(scaleValueCurrent);
   }
-  if(evt.target.closest('.scale__control--bigger') && scaleValue < 100) {
-    scaleValue += scaleValueStep;
-    resizeImage(scaleValue);
+  if(evt.target.closest('.scale__control--bigger') && scaleValueCurrent < 100) {
+    scaleValueCurrent += scaleValueStep;
+    resizeImage(scaleValueCurrent);
   }
 });
+export {closeUploadForm};

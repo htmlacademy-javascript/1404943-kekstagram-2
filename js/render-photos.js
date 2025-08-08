@@ -1,10 +1,9 @@
-import {createPhotos} from './create-photos';
 const photosParent = document.querySelector('.pictures');
 const template = document.querySelector('#picture').content.querySelector('.picture');
-const photosList = createPhotos(25);
+
 const photoListTemplate = document.createDocumentFragment();
 
-const renderPhotos = () => {
+const renderPhotos = (photosList) => {
   photosList.forEach((photo) => {
     const photoTemplate = template.cloneNode(true);
     const img = photoTemplate.querySelector('img');
@@ -18,4 +17,4 @@ const renderPhotos = () => {
   photosParent.appendChild(photoListTemplate);
 };
 
-export {renderPhotos, photosList};
+export {renderPhotos};
