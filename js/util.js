@@ -35,7 +35,7 @@ const createRandomIdFromRangeGenerator = (min, max) => {
 const isEscapeKey = (evt) => evt.key === 'Escape';
 const getRandomArrayIndex = (array) => array[getRandomInteger(0, array.length - 1)];
 
-const showAlert = (message) => {
+const showAlert = () => {
   const errorArea = errorLoadDataTemplate.cloneNode(true).content.querySelector('.data-error');
 
   document.body.append(errorArea);
