@@ -1,4 +1,5 @@
-const slider = document.querySelector('.img-upload__effect-level');
+const effectsLevel = document.querySelector('.img-upload__effect-level');
+const slider = effectsLevel.querySelector('.effect-level__slider');
 const effects = document.querySelector('.img-upload__effects');
 const effectLevelInput = document.querySelector('.effect-level__value');
 const previewImg = document.querySelector('.img-upload__preview img');
@@ -105,9 +106,9 @@ effects.addEventListener('change', (evt) => {
   if(effectCurrent === 'none') {
     previewImg.style.filter = effectSlider.filter;
     effectLevelInput.value = '';
-    slider.classList.add('hidden');
+    effectsLevel.classList.add('hidden');
   } else {
-    slider.classList.remove('hidden');
+    effectsLevel.classList.remove('hidden');
 
     slider.noUiSlider.updateOptions(effectSlider.setting);
   }
