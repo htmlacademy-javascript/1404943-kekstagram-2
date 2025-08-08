@@ -1,3 +1,5 @@
+const ALERT_SHOW_TIME = 5000;
+const errorLoadDataTemplate = document.querySelector('#data-error');
 const getRandomInteger = (min, max) => {
   const lower = Math.ceil(Math.min(Math.abs(min), Math.abs(max)));
   const upper = Math.floor(Math.max(Math.abs(min), Math.abs(max)));
@@ -32,4 +34,14 @@ const createRandomIdFromRangeGenerator = (min, max) => {
 const isEscapeKey = (evt) => evt.key === 'Escape';
 const getRandomArrayIndex = (array) => array[getRandomInteger(0, array.length - 1)];
 
-export {getRandomInteger, createIdGenerator,createRandomIdFromRangeGenerator, getRandomArrayIndex, isEscapeKey};
+const showAlert = (message) => {
+  const errorArea = errorLoadDataTemplate.cloneNode(true).content.querySelector('.data-error');
+
+  document.body.append(errorArea);
+
+  setTimeout(() => {
+    errorArea.remove();
+  }, ALERT_SHOW_TIME);
+};
+
+export {getRandomInteger, createIdGenerator,createRandomIdFromRangeGenerator, getRandomArrayIndex, isEscapeKey, showAlert};
