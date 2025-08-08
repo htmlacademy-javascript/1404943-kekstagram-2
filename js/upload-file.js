@@ -1,4 +1,5 @@
 import {isEscapeKey} from './util';
+const ALLOWED_EXTENSIONS = ['jpg', 'jpeg', 'png', 'gif'];
 
 const body = document.body;
 const form = document.querySelector('.img-upload__form');
@@ -11,29 +12,25 @@ const scale = form.querySelector('.scale');
 const scaleInput = scale.querySelector('.scale__control--value');
 const description = form.querySelector('.text__description');
 const hashtagsElem = form.querySelector('.text__hashtags');
+const effectsPreview = form.querySelectorAll('.effects__preview');
 const scaleValueMax = 100;
 let scaleValueCurrent = scaleValueMax;
 const scaleValueStep = 25;
 
-// Function declarations
 function closeUploadForm() {
   overlay.classList.add('hidden');
   body.classList.remove('modal-open');
 
-  // Reset effects
   effectsLevel.value = '';
   previewImg.style.filter = 'none';
   effectsLevel.classList.add('hidden');
 
-  // Reset scale
   scaleValueCurrent = scaleValueMax;
   scaleInput.value = `${scaleValueMax}%`;
   previewImg.style.scale = `${scaleValueMax}%`;
 
-  // Reset form fields
   form.reset();
 
-  // Clear file input
   inputFile.value = '';
 
   document.removeEventListener('keydown', onEscKeydown);
@@ -53,7 +50,18 @@ function onEscKeydown(evt) {
 }
 
 inputFile.addEventListener('change', () => {
+  const file = inputFile.files[0];
+  const fileName = file.name.toLowerCase();
+  const matches = ALLOWED_EXTENSIONS.some((ext) => fileName.endsWith(`.${ext}`));
+  if (matches) {
+    previewImg.src = URL.createObjectURL(file);
+    effectsPreview.forEach((effect) => {
+      effect.style.backgroundImage = `url(${URL.createObjectURL(file)})`;
+    });
+  }
+
   overlay.classList.remove('hidden');
+
   body.classList.add('modal-open');
   effectsLevel.classList.add('hidden');
   document.addEventListener('keydown', onEscKeydown);
