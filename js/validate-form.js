@@ -1,9 +1,11 @@
 import {sendData} from './api';
+import {isEscapeKey} from './util';
+
 const uploadForm = document.querySelector('.img-upload__form');
 const hashtagInput = document.querySelector('.text__hashtags');
 const commentInput = document.querySelector('.text__description');
-const successTemplate = document.querySelector('#success').content;
-const errorTemplate = document.querySelector('#error').content;
+const successTemplate = document.querySelector('#success').content.querySelector('.success');
+const errorTemplate = document.querySelector('#error').content.querySelector('.error');
 const submitButton = document.querySelector('.img-upload__submit');
 
 const pristine = new Pristine(uploadForm, {
@@ -12,8 +14,13 @@ const pristine = new Pristine(uploadForm, {
   errorTextClass: 'img-upload__field-wrapper--error'
 });
 
+const resetValidation = () => {
+  pristine.reset();
+};
+
 const HASHTAG_REGEX = /^#[a-zа-яё0-9]{1,19}$/i;
 const MAX_COMMENT_LENGTH = 140;
+const MAX_HASHTAGS_COUNT = 5;
 
 let errorMessage = '';
 
@@ -21,42 +28,30 @@ pristine.addValidator(hashtagInput, (value) => {
   if (!value.trim()) {
     return true;
   }
-
   const hashtags = value.trim().toLowerCase().split(/\s+/).filter(Boolean);
-
-  if (hashtags.length > 5) {
+  if (hashtags.length > MAX_HASHTAGS_COUNT) {
     errorMessage = 'Нельзя указать больше пяти хэштегов.';
     return false;
   }
-
   const uniqueHashtags = new Set(hashtags);
   if (uniqueHashtags.size !== hashtags.length) {
     errorMessage = 'Один и тот же хэштег не может быть использован дважды.';
     return false;
   }
-
   for (const tag of hashtags) {
     if (!HASHTAG_REGEX.test(tag)) {
-      errorMessage = `Хэштег "${tag}" невалиден. Он должен начинаться с #, состоять из букв/цифр и быть не длиннее 20 символов.`;
+      errorMessage = `Хэштег "${tag}" невалиден.`;
       return false;
     }
   }
-
   return true;
 }, () => errorMessage, 2, false);
 
-pristine.addValidator(commentInput, (value) => {
-  if (value.length > MAX_COMMENT_LENGTH) {
-    return false;
-  }
-  return true;
-}, `Длина комментария не может быть больше ${MAX_COMMENT_LENGTH} символов.`);
+pristine.addValidator(commentInput, (value) => value.length <= MAX_COMMENT_LENGTH, `Длина комментария не может быть больше ${MAX_COMMENT_LENGTH} символов.`);
 
-const handleMessageClose = (messageElement, onClose) => {
-  const closeButton = messageElement.querySelector('button');
-
+const handleMessageClose = (messageElement) => {
   const onDocumentKeydown = (evt) => {
-    if (evt.key === 'Escape') {
+    if (isEscapeKey(evt)) {
       evt.preventDefault();
       evt.stopPropagation();
       closeMessage();
@@ -64,7 +59,8 @@ const handleMessageClose = (messageElement, onClose) => {
   };
 
   const onOutsideClick = (evt) => {
-    if (!evt.target.closest('.success__inner') && !evt.target.closest('.error__inner')) {
+    const inner = messageElement.querySelector('.success__inner, .error__inner');
+    if (!inner.contains(evt.target)) {
       closeMessage();
     }
   };
@@ -73,26 +69,22 @@ const handleMessageClose = (messageElement, onClose) => {
     messageElement.remove();
     document.removeEventListener('keydown', onDocumentKeydown);
     document.removeEventListener('click', onOutsideClick);
-    if (onClose) {
-      onClose();
-    }
   }
 
+  const closeButton = messageElement.querySelector('.success__button, .error__button');
   closeButton.addEventListener('click', closeMessage);
   document.addEventListener('keydown', onDocumentKeydown);
   document.addEventListener('click', onOutsideClick);
 };
 
-// Функция для отображения сообщения об успешной отправке
-const showSuccessMessage = (onClose) => {
-  const successElement = successTemplate.cloneNode(true).querySelector('.success');
+const showSuccessMessage = () => {
+  const successElement = successTemplate.cloneNode(true);
   document.body.append(successElement);
-  handleMessageClose(successElement, onClose);
+  handleMessageClose(successElement);
 };
 
-// Функция для отображения сообщения об ошибке
 const showErrorMessage = () => {
-  const errorElement = errorTemplate.cloneNode(true).querySelector('.error');
+  const errorElement = errorTemplate.cloneNode(true);
   document.body.append(errorElement);
   handleMessageClose(errorElement);
 };
@@ -107,20 +99,20 @@ const setUploadFormSubmit = (onSuccess) => {
 
       sendData(new FormData(evt.target))
         .then(() => {
-          showSuccessMessage(() => {
-            if (onSuccess) {
-              onSuccess();
-            }
-          });
+          // При успехе: сначала закрываем форму, потом показываем сообщение.
+          onSuccess();
+          showSuccessMessage();
         })
         .catch(() => {
+          // При ошибке: форма остается открытой, показывается сообщение об ошибке.
           showErrorMessage();
         })
         .finally(() => {
+          // В любом случае разблокируем кнопку.
           submitButton.disabled = false;
         });
     }
   });
 };
 
-export {setUploadFormSubmit};
+export {setUploadFormSubmit, resetValidation};

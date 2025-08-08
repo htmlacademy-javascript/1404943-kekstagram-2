@@ -12,9 +12,17 @@ const debounce = (callback, delay) => {
 };
 
 const getRandomPhotos = (photos) => {
-  const shuffled = photos.slice().sort(() => Math.random() - 0.5);
+  const shuffled = photos.slice(); // создаем копию массива
+
+  // Перемешиваем массив алгоритмом Фишера-Йетса
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+
   return shuffled.slice(0, Math.min(RANDOM_COUNT, shuffled.length));
 };
+
 
 const sortByComments = (photos) =>
   photos.slice().sort((a, b) => b.comments.length - a.comments.length);

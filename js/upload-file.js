@@ -1,4 +1,6 @@
 import {isEscapeKey} from './util';
+import {resetValidation} from './validate-form';
+
 const ALLOWED_EXTENSIONS = ['jpg', 'jpeg', 'png', 'gif'];
 
 const body = document.body;
@@ -10,12 +12,14 @@ const overlay = form.querySelector('.img-upload__overlay');
 const effectsLevel = form.querySelector('.img-upload__effect-level');
 const scale = form.querySelector('.scale');
 const scaleInput = scale.querySelector('.scale__control--value');
+
 const description = form.querySelector('.text__description');
 const hashtagsElem = form.querySelector('.text__hashtags');
 const effectsPreview = form.querySelectorAll('.effects__preview');
 const scaleValueMax = 100;
-let scaleValueCurrent = scaleValueMax;
 const scaleValueStep = 25;
+let scaleValueCurrent = 100;
+
 
 function closeUploadForm() {
   overlay.classList.add('hidden');
@@ -25,14 +29,13 @@ function closeUploadForm() {
   previewImg.style.filter = 'none';
   effectsLevel.classList.add('hidden');
 
-  scaleValueCurrent = scaleValueMax;
-  scaleInput.value = `${scaleValueMax}%`;
-  previewImg.style.scale = `${scaleValueMax}%`;
+  scaleInput.setAttribute('value',`${scaleValueMax}%`) ;
+  previewImg.style.transform = `scale(${scaleValueMax}%)`;
 
   form.reset();
 
   inputFile.value = '';
-
+  resetValidation();
   document.removeEventListener('keydown', onEscKeydown);
 }
 
@@ -72,8 +75,8 @@ buttonCancel.addEventListener('click', () => {
 });
 
 const resizeImage = (value) => {
-  scaleInput.value = `${value}%`;
-  previewImg.style.scale = `${value}%`;
+  scaleInput.setAttribute('value', `${value}%`);
+  previewImg.style.transform = `scale(${value}%)`;
 };
 
 scale.addEventListener('click', (evt) => {
