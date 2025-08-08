@@ -1,9 +1,15 @@
 const photosParent = document.querySelector('.pictures');
 const template = document.querySelector('#picture').content.querySelector('.picture');
 
-const photoListTemplate = document.createDocumentFragment();
+const clearPhotos = () => {
+  photosParent.querySelectorAll('.picture').forEach((element) => element.remove());
+};
 
 const renderPhotos = (photosList) => {
+  clearPhotos();
+
+  const photoListTemplate = document.createDocumentFragment();
+
   photosList.forEach((photo) => {
     const photoTemplate = template.cloneNode(true);
     const img = photoTemplate.querySelector('img');
@@ -14,6 +20,7 @@ const renderPhotos = (photosList) => {
     photoTemplate.querySelector('.picture__likes').textContent = photo.likes;
     photoListTemplate.append(photoTemplate);
   });
+
   photosParent.appendChild(photoListTemplate);
 };
 
