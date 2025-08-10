@@ -1,6 +1,10 @@
 import {sendData} from './api';
 import {isEscapeKey} from './util';
 
+const HASHTAG_REGEX = /^#[a-zа-яё0-9]{1,19}$/i;
+const MAX_COMMENT_LENGTH = 140;
+const MAX_HASHTAGS_COUNT = 5;
+
 const uploadForm = document.querySelector('.img-upload__form');
 const hashtagInput = document.querySelector('.text__hashtags');
 const commentInput = document.querySelector('.text__description');
@@ -18,9 +22,6 @@ const resetValidation = () => {
   pristine.reset();
 };
 
-const HASHTAG_REGEX = /^#[a-zа-яё0-9]{1,19}$/i;
-const MAX_COMMENT_LENGTH = 140;
-const MAX_HASHTAGS_COUNT = 5;
 
 let errorMessage = '';
 

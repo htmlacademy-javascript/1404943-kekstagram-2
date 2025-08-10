@@ -1,9 +1,4 @@
-const effectsLevel = document.querySelector('.img-upload__effect-level');
-const slider = effectsLevel.querySelector('.effect-level__slider');
-const effects = document.querySelector('.img-upload__effects');
-const effectLevelInput = document.querySelector('.effect-level__value');
-const previewImg = document.querySelector('.img-upload__preview img');
-const dataSlider = [
+const FILTER_OPTIONS = [
   {
     name: 'none',
     filter: 'none',
@@ -73,6 +68,13 @@ const dataSlider = [
     }
   },
 ];
+
+const effectsLevel = document.querySelector('.img-upload__effect-level');
+const slider = effectsLevel.querySelector('.effect-level__slider');
+const effects = document.querySelector('.img-upload__effects');
+const effectLevelInput = document.querySelector('.effect-level__value');
+const previewImg = document.querySelector('.img-upload__preview img');
+
 let effectSlider = {};
 
 noUiSlider.create(slider, {
@@ -101,7 +103,7 @@ noUiSlider.create(slider, {
 effects.addEventListener('change', (evt) => {
   const effectCurrent = evt.target.value;
 
-  effectSlider = dataSlider.find((test) => test.name === effectCurrent);
+  effectSlider = FILTER_OPTIONS.find((test) => test.name === effectCurrent);
 
   if(effectCurrent === 'none') {
     previewImg.style.filter = effectSlider.filter;
@@ -112,7 +114,6 @@ effects.addEventListener('change', (evt) => {
 
     slider.noUiSlider.updateOptions(effectSlider.setting);
   }
-
 });
 
 slider.noUiSlider.on('update', (values) => {
