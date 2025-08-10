@@ -1,20 +1,14 @@
 import {renderPhotos} from './render-photos';
-const imgFilters = document.querySelector('.img-filters');
+import {debounce} from './util';
+
 const RANDOM_COUNT = 10;
 const DEBOUNCE_DELAY = 500;
 
-const debounce = (callback, delay) => {
-  let timeoutId;
-  return (...args) => {
-    clearTimeout(timeoutId);
-    timeoutId = setTimeout(() => callback(...args), delay);
-  };
-};
+const imgFilters = document.querySelector('.img-filters');
 
 const getRandomPhotos = (photos) => {
-  const shuffled = photos.slice(); // создаем копию массива
+  const shuffled = photos.slice();
 
-  // Перемешиваем массив алгоритмом Фишера-Йетса
   for (let i = shuffled.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];

@@ -2,6 +2,9 @@ import {isEscapeKey} from './util';
 import {resetValidation} from './validate-form';
 
 const ALLOWED_EXTENSIONS = ['jpg', 'jpeg', 'png', 'gif'];
+const SCALE_VALUE_MAX = 100;
+const SCALE_VALUE_MIN = 25;
+const SCALE_STEP = 25;
 
 const body = document.body;
 const form = document.querySelector('.img-upload__form');
@@ -12,14 +15,10 @@ const overlay = form.querySelector('.img-upload__overlay');
 const effectsLevel = form.querySelector('.img-upload__effect-level');
 const scale = form.querySelector('.scale');
 const scaleInput = scale.querySelector('.scale__control--value');
-
 const description = form.querySelector('.text__description');
 const hashtagsElem = form.querySelector('.text__hashtags');
 const effectsPreview = form.querySelectorAll('.effects__preview');
-const scaleValueMax = 100;
-const scaleValueStep = 25;
 let scaleValueCurrent = 100;
-
 
 function closeUploadForm() {
   overlay.classList.add('hidden');
@@ -29,8 +28,8 @@ function closeUploadForm() {
   previewImg.style.filter = 'none';
   effectsLevel.classList.add('hidden');
 
-  scaleInput.setAttribute('value',`${scaleValueMax}%`) ;
-  previewImg.style.transform = `scale(${scaleValueMax}%)`;
+  scaleInput.setAttribute('value',`${SCALE_VALUE_MAX}%`) ;
+  previewImg.style.transform = `scale(${SCALE_VALUE_MAX}%)`;
 
   form.reset();
 
@@ -80,12 +79,12 @@ const resizeImage = (value) => {
 };
 
 scale.addEventListener('click', (evt) => {
-  if(evt.target.closest('.scale__control--smaller') && scaleValueCurrent > 25) {
-    scaleValueCurrent -= scaleValueStep;
+  if(evt.target.closest('.scale__control--smaller') && scaleValueCurrent > SCALE_VALUE_MIN) {
+    scaleValueCurrent -= SCALE_STEP;
     resizeImage(scaleValueCurrent);
   }
-  if(evt.target.closest('.scale__control--bigger') && scaleValueCurrent < 100) {
-    scaleValueCurrent += scaleValueStep;
+  if(evt.target.closest('.scale__control--bigger') && scaleValueCurrent < SCALE_VALUE_MAX) {
+    scaleValueCurrent += SCALE_STEP;
     resizeImage(scaleValueCurrent);
   }
 });

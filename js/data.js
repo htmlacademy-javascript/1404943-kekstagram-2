@@ -4,7 +4,7 @@ const MIN_COUNT_COMMENTS = 0;
 const MAX_COUNT_COMMENTS = 30;
 const MIN_COUNT_LIKES = 15;
 const MAX_COUNT_LIKES = 200;
-const DESCRIPTION = [
+const DESCRIPTIONS = [
   'Застывший момент красоты.',
   'Истории, рассказанные светом и тенью.',
   'Каждый кадр – это новый взгляд.',
@@ -37,4 +37,4 @@ const MESSAGES = [
   'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'
 ];
 
-export {COUNT_PHOTO,DESCRIPTION, NAMES, MESSAGES, COUNT_AVATARS, MIN_COUNT_COMMENTS, MAX_COUNT_COMMENTS, MIN_COUNT_LIKES, MAX_COUNT_LIKES};
+export {COUNT_PHOTO,DESCRIPTIONS, NAMES, MESSAGES, COUNT_AVATARS, MIN_COUNT_COMMENTS, MAX_COUNT_COMMENTS, MIN_COUNT_LIKES, MAX_COUNT_LIKES};
