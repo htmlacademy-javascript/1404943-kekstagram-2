@@ -1,22 +1,10 @@
 import {renderPhotos} from './render-photos';
-import {debounce} from './util';
+import {debounce, getRandomElements} from './util';
 
 const RANDOM_COUNT = 10;
 const DEBOUNCE_DELAY = 500;
 
 const imgFilters = document.querySelector('.img-filters');
-
-const getRandomPhotos = (photos) => {
-  const shuffled = photos.slice();
-
-  for (let i = shuffled.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-  }
-
-  return shuffled.slice(0, Math.min(RANDOM_COUNT, shuffled.length));
-};
-
 
 const sortByComments = (photos) =>
   photos.slice().sort((a, b) => b.comments.length - a.comments.length);
@@ -44,7 +32,7 @@ const filterPhotos = (photos, callback) => {
     if (targetElement.id === 'filter-default') {
       filteredPhotos = photos.slice();
     } else if (targetElement.id === 'filter-random') {
-      filteredPhotos = getRandomPhotos(photos);
+      filteredPhotos = getRandomElements(photos, RANDOM_COUNT);
     } else if (targetElement.id === 'filter-discussed') {
       filteredPhotos = sortByComments(photos);
     }
